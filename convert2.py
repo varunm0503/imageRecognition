@@ -1,8 +1,15 @@
 import re
 import numpy
-
+from matplotlib import pyplot
 from os import listdir
 from os.path import isfile, join
+
+def getImage(mypath):
+	imageVector = meanImage(mypath)
+	im1d = numpy.asarray(imageVector)
+	im2d = im1d.reshape(112,92)
+	pyplot.imshow(im2d, pyplot.cm.gray)
+	pyplot.show()
 
 def meanImage(mypath):
 	vectorList = convertTestSetToVectors(mypath)
