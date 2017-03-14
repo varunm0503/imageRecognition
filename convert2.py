@@ -4,6 +4,19 @@ import numpy
 from os import listdir
 from os.path import isfile, join
 
+def meanImage(mypath):
+	vectorList = convertTestSetToVectors(mypath)
+	l = len(vectorList[0])
+	meanImageVector = [0] * l
+	den = len(vectorList)
+	for i in range(l):
+		for v in vectorList:
+			meanImageVector[i] += v[i] 
+	for i in range(l):
+		meanImageVector[i] /= den	
+	return meanImageVector
+	
+
 def convertTestSetToVectors(mypath):
         onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
         vectorlist = []
