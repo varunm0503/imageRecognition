@@ -4,6 +4,15 @@ from matplotlib import pyplot
 from os import listdir
 from os.path import isfile, join
 
+def normalize(mypath):
+	vectorList = convertTestSetToVectors(mypath)
+	l = len(vectorList)
+	meanVector = meanImage(mypath)
+	for v in vectorList:
+		for i in range(l):
+			v[i] -= meanVector[i]
+	return vectorList
+
 def getImage(mypath):
 	imageVector = meanImage(mypath)
 	im1d = numpy.asarray(imageVector)
