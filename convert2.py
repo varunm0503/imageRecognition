@@ -4,14 +4,27 @@ from matplotlib import pyplot
 from os import listdir
 from os.path import isfile, join
 
+def coVariance(mypath):
+	normVectorList = normalize(mypath)
+	aMatrix = [list(i) for i in zip(*normVectorList)]
+	aTransMat = numpy.matrix(normVectorList)
+	aMat = numpy.matrix(aMatrix)
+	return aTransMat * aMat 
+
 def normalize(mypath):
 	vectorList = convertTestSetToVectors(mypath)
-	l = len(vectorList)
+	#print vectorList[0][150]
 	meanVector = meanImage(mypath)
+	#print meanVector[150]
+	l = len(meanVector)
+	normalisedVectorList = []
 	for v in vectorList:
+		normalisedVector = [0]*l
 		for i in range(l):
-			v[i] -= meanVector[i]
-	return vectorList
+			normalisedVector[i] = int(v[i]) - int(meanVector[i])
+		normalisedVectorList.append(normalisedVector)
+	#print normalisedVectorList[0][150]
+	return normalisedVectorList
 
 def getImage(mypath):
 	imageVector = meanImage(mypath)
