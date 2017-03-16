@@ -1,8 +1,26 @@
 import re
 import numpy
+import operator
 from matplotlib import pyplot
 from os import listdir
 from os.path import isfile, join
+
+def sortEigenValues(mypath):
+	eigValues, eigVectors = eigenVectors(mypath)
+	eigPositionList = []
+	for i in range(len(eigValues)):
+		eigPositionList.append(i)
+	eigValuePositionList = zip(eigValues,eigPositionList)
+	eigValuePositionList.sort(key=operator.itemgetter(0))
+	eigValuePositionList.reverse()
+	return eigValuePositionList
+		
+
+#first column is first eigenVector not first row
+def eigenVectors(mypath):
+	K = coVariance(mypath)
+	eigenvalues, eigenvectors = numpy.linalg.eig(K)
+	return eigenvalues , eigenvectors
 
 def coVariance(mypath):
 	normVectorList = normalize(mypath)
