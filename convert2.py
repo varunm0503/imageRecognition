@@ -5,6 +5,37 @@ from matplotlib import pyplot
 from os import listdir
 from os.path import isfile, join
 
+def weights(mypath):
+	evalues , evectors = kEigenVectors(mypath)
+	#evectors = evectors.transpose() 
+	L = normalize(mypath)
+	evectors = evectors * L
+	norms = numpy.linalg.norm(evectors,axis = 0)
+	evectors = evectors / norms
+	return evectors
+
+def kEigenVectors(mypath):
+	c = coVariance(mypath) 
+	evalues, evectors = numpy.linalg.eig(c)
+	sort_indices = evalues.argsort()[::-1] 
+	evalues = evalues[sort_indices]                               # puttin the evalues in that order 
+	evectors = evectors[sort_indices]
+
+	evalues_sum = sum(evalues[:])  
+	evalues_count = 0
+	evalues_energy = 0.0
+
+	for evalue in evalues: 
+		evalues_count += 1 
+		evalues_energy += evalue / evalues_sum 
+		if evalues_energy >= 0.85: 
+			break 
+
+	evalues = evalues[0:evalues_count]                            # reduce the number of eigenvectors/values to consider 
+	evectors = evectors[0:evalues_count] 
+	return evalues,evectors
+
+#not using it anymore, skip
 def sortEigenValues(mypath):
 	eigValues, eigVectors = eigenVectors(mypath)
 	eigPositionList = []
@@ -16,7 +47,9 @@ def sortEigenValues(mypath):
 	return eigValuePositionList
 		
 
+#not using it anymore, skip
 #first column is first eigenVector not first row
+#confirm
 def eigenVectors(mypath):
 	K = coVariance(mypath)
 	eigenvalues, eigenvectors = numpy.linalg.eig(K)
@@ -27,7 +60,11 @@ def coVariance(mypath):
 	aMatrix = [list(i) for i in zip(*normVectorList)]
 	aTransMat = numpy.matrix(normVectorList)
 	aMat = numpy.matrix(aMatrix)
-	return aTransMat * aMat 
+	c = aTransMat * aMat 
+	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+	l = len(onlyfiles)
+	c/=l
+	return c
 
 def normalize(mypath):
 	vectorList = convertTestSetToVectors(mypath)
@@ -42,6 +79,7 @@ def normalize(mypath):
 			normalisedVector[i] = int(v[i]) - int(meanVector[i])
 		normalisedVectorList.append(normalisedVector)
 	#print normalisedVectorList[0][150]
+	#print len(normalisedVectorList)
 	return normalisedVectorList
 
 def getImage(mypath):
@@ -67,9 +105,12 @@ def meanImage(mypath):
 def convertTestSetToVectors(mypath):
         onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
         vectorlist = []
+	#print "hi"
+	#print (len(onlyfiles))
         for filename in onlyfiles:
                 imageVector = read_pgm(mypath + '/' + filename)
                 vectorlist.append(imageVector)
+	#print len(vectorlist)
 	return vectorlist
 
 
