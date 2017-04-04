@@ -73,7 +73,7 @@ def train(mypath, _energy = 0.85):
 	print '> Initializing ended' 
 	
 	#img = cv2.imread("./resources/att_faces/s1/2.pgm", 0)                                        # read as a grayscale image 
-	img = cv2.imread("./cr2.pgm",0)
+	img = cv2.imread("./cr.pgm",0)
 	img_col = np.array(img, dtype='float64').flatten()                      # flatten the image 
 	img_col -= mean_img_col                                            # subract the mean column 
 	img_col = np.reshape(img_col, (mn, 1))                             # from row vector to col vector 
