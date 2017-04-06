@@ -12,12 +12,13 @@ def detectFace(img_path):
 	# Detect faces in the image
 	faces = faceCascade.detectMultiScale( gray, 1.3,5)
 	print (len(faces))
+	imgList = []
 	# Draw a rectangle around the faces
 	for (x,y,w,h) in faces:
-		print x
-		print y
-		print w
-		print h
+		#print x
+		#print y
+		#print w
+		#print h
 		image = Image.open(img_path)
 		img2 = image.crop((x,y,x+w,y+h))
 		name = "img" + str(x) + str(y) + ".jpg" 
@@ -27,9 +28,12 @@ def detectFace(img_path):
 		img2.save(name)
 		img3 = cv2.imread(name)
 		gray2 = cv2.cvtColor(img3, cv2.COLOR_BGR2GRAY)
-		name2 = "img" + str(x) + str(y) + ".pgm"
+		name2 = "./resources/detect/img" + str(x) + str(y) + ".pgm"
 		im = Image.fromarray(gray2)
+		imgList.append(name2)
 		im.save(name2)
 		#gray2.save(name2)
+	print "detected"
+	return imgList
 
 		

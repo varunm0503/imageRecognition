@@ -7,11 +7,11 @@ import numpy as np
 
 def train(mypath, _energy = 0.85):
 	#onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-	faces_count = 4 
+	faces_count = 3 
 	faces_dir = mypath                                                             # directory path to the AT&T faces 
 
-	train_faces_count = 3                                                      # number of faces used for training 
-	test_faces_count = 4                                                       # number of faces used for testing 
+	train_faces_count = 8                                                      # number of faces used for training 
+	test_faces_count = 4                                                      # number of faces used for testing 
  
 	l = train_faces_count * faces_count                                         # training images count 
 	m = 92                                                                      # number of columns of the image 
@@ -26,7 +26,7 @@ def train(mypath, _energy = 0.85):
 	
 	cur_img = 0 
 	for face_id in xrange(1, faces_count + 1): 
-		training_ids = random.sample(range(1, 4), train_faces_count)  # the id's of the 6 random training images 
+		training_ids = random.sample(range(1, 10), train_faces_count)  # the id's of the 6 random training images 
 		r_ids.append(training_ids)                              # remembering the training id's for later 
 		for training_id in training_ids: 
 			path_to_img = os.path.join(faces_dir, 's' + str(face_id), str(training_id) + '.pgm')          # relative path
@@ -88,4 +88,4 @@ def train(mypath, _energy = 0.85):
 	return (closest_face_id / train_faces_count) + 1                   # return the faceid (1..40) 
 
 if __name__ == "__main__":
-    train("./resources/att_faces")
+    train("./resources/celeb")

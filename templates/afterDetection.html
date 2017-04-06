@@ -1,0 +1,15 @@
+<html>
+<head>
+</head>
+<body>
+        <div id = "Search Box">
+                "hello"
+                <form action = "http://localhost:5000/uploader" method = "POST" enctype = "multipart/form-data">
+                        <input type = "file" name = "file" />
+                        <input type = "submit"/>
+                </form>
+        Uploaded image: <img src = "{{ url_for('static', filename = 'IMG_20170326_144820.jpg') }}" />
+	</div>
+</body>
+</html>
+
