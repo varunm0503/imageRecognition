@@ -28,9 +28,9 @@ def detectFace(img_path):
 		img2.save(name)
 		img3 = cv2.imread(name)
 		gray2 = cv2.cvtColor(img3, cv2.COLOR_BGR2GRAY)
-		name2 = "./resources/detect/img" + str(x) + str(y) + ".pgm"
+		name2 = "./static/img" + str(x) + str(y) + ".pgm"
 		im = Image.fromarray(gray2)
-		imgList.append(name2)
+		imgList.append( "img" + str(x) + str(y) + ".pgm" )
 		im.save(name2)
 		#gray2.save(name2)
 	print "detected"

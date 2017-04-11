@@ -8,7 +8,13 @@
                         <input type = "file" name = "file" />
                         <input type = "submit"/>
                 </form>
-        Uploaded image: <img src = "{{ image1 }}" />
+        Uploaded image: <img src = "{{ image1 }}" height = "50px" width = "80px"/>
+	</div>
+	<div id = "Detected image">
+		Detected images <br/>
+		{% for img in imgList %}
+		<span> {{ img }} <img src = "{{ img }}" height = "30px" width = "50px" /> </span>
+		{% endfor %}
 	</div>
 </body>
 </html>

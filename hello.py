@@ -20,11 +20,14 @@ def upload_file():
 	if request.method == 'POST':
 		f = request.files['file']
 		f.save(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
-		imgList = detectFace(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
+		imageList = detectFace(os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
 		print "hi"
-		print imgList
+		print imageList
+		imgList = []
+		for i in imageList:
+			imgList.append( os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(i))  )		
 		#return "test"
-		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)))
+		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imgList)
 		
 if __name__ == '__main__':
 	app.run(debug = True)
