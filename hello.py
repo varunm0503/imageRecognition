@@ -1,5 +1,6 @@
 import os
 from detect import *
+from convert import *
 from flask import render_template
 from werkzeug.utils import secure_filename
 from flask import Flask, request, redirect, url_for
@@ -26,8 +27,15 @@ def upload_file():
 		imgList = []
 		for i in imageList:
 			imgList.append( os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(i))  )		
-		#return "test"
-		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imgList)
+		print imgList
+		pList = []
+		for i in imgList:
+			print i
+			print "hi"
+			a = train("./resources/our",i)
+			pList.append(a)
+		print pList
+		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = pList)
 		
 if __name__ == '__main__':
 	app.run(debug = True)

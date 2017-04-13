@@ -13,8 +13,15 @@
 	<div id = "Detected image">
 		Detected images <br/>
 		{% for img in imgList %}
-		<span> {{ img }} <img src = "{{ img }}" height = "30px" width = "50px" /> </span>
+		<span> {{ img }} <img src = "static/{{ img }}" height = "30px" width = "50px" /> </span>
 		{% endfor %}
+	</div>
+	<div id = "Recognized people">
+		Recognized people
+		{% for p in pList %}
+		<span> {{ p }} </span>
+		{% endfor %}
+		1: Yash 2: Golu 3: Aunts (Need to link this info in db)
 	</div>
 </body>
 </html>
