@@ -22,10 +22,12 @@ def detectFace(img_path):
 		image = Image.open(img_path)
 		img2 = image.crop((x,y,x+w,y+h))
 		name = "img" + str(x) + str(y) + ".jpg" 
+		name3 = "./static/disp" + str(x) + str(y) + ".jpg" 
 		new_width = 92
 		new_height = 112
 		img2 = img2.resize((new_width, new_height), Image.ANTIALIAS)
 		img2.save(name)
+		img2.save(name3)
 		img3 = cv2.imread(name)
 		gray2 = cv2.cvtColor(img3, cv2.COLOR_BGR2GRAY)
 		name2 = "./static/img" + str(x) + str(y) + ".pgm"

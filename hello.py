@@ -41,12 +41,15 @@ def upload_file():
 		for i in imageList:
 			imgList.append( os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(i))  )		
 		print imgList
+		displayList = []
 		pList = []
 		for i in imgList:
 			print i
 			print "hi"
+			displayList.append(i[:9] + "disp" + i[12:-3] + "jpg")
 			a = train("./resources/our",i)
 			pList.append(a)
+		print displayList	
 		print pList
 		con = sqlite3.connect('database.db')
 		con.row_factory = sqlite3.Row
@@ -66,7 +69,7 @@ def upload_file():
 		for r in rows:
 			myList.append(r[0])	
 		print myList	
-		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = myList)
+		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = myList, displayList = displayList)
 		
 if __name__ == '__main__':
 	app.run(debug = True)

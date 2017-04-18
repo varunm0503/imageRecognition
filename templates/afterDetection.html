@@ -12,8 +12,8 @@
 	</div>
 	<div id = "Detected image">
 		Detected images <br/>
-		{% for img in imgList %}
-		<span> {{ img }} <img src = "static/{{ img }}" height = "30px" width = "50px" /> </span>
+		{% for img in displayList %}
+		<span> {{ img }} <img src = "{{ img }}" height = "30px" width = "50px" /> </span>
 		{% endfor %}
 	</div>
 	<div id = "Recognized people">
