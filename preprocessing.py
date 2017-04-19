@@ -5,8 +5,8 @@
 # Licensed under the BSD license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from facerec.feature import AbstractFeature
-from facerec.util import asColumnMatrix
+from feature import AbstractFeature
+from util import asColumnMatrix
 from scipy import ndimage
 from scipy.misc import imresize
 
@@ -74,7 +74,7 @@ class TanTriggsPreprocessing(AbstractFeature):
     def __repr__(self):
         return "TanTriggsPreprocessing (alpha=%.3f,tau=%.3f,gamma=%.3f,sigma0=%.3f,sigma1=%.3f)" % (self._alpha,self._tau,self._gamma,self._sigma0,self._sigma1)
 
-from facerec.lbp import ExtendedLBP
+from lbp import ExtendedLBP
 
 class LBPPreprocessing(AbstractFeature):
 
@@ -94,7 +94,7 @@ class LBPPreprocessing(AbstractFeature):
     def __repr__(self):
         return "LBPPreprocessing (lbp_operator=%s)" % (repr(self._lbp_operator))
 
-from facerec.normalization import zscore, minmax
+from normalization import zscore, minmax
 
 class MinMaxNormalizePreprocessing(AbstractFeature):
     def __init__(self, low=0, high=1):
