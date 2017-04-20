@@ -40,6 +40,21 @@ def get_prediction(image_data):
     prediction = model.predict(image)
     return prediction
 
+def identify(image_path, csv_file , model_filename):
+	print image_path
+	print csv_file
+	print model_filename
+	global model	
+	model = recognition.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
+	print model
+	image = open(image_path, 'rb') #open binary file in read mode
+	image_read = image.read()
+	image_data = base64.encodestring(image_read)
+	#print image_data
+	prediction = get_prediction(image_data)
+	return prediction
+
+
 if __name__ == '__main__':
 	from argparse import ArgumentParser	
 	parser = ArgumentParser()

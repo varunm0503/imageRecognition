@@ -5,6 +5,7 @@ from convert import *
 from flask import render_template, g
 from werkzeug.utils import secure_filename
 from flask import Flask, request, redirect, url_for
+from new import *
 
 DATABASE = '/path/to/database.db'
 UPLOAD_FOLDER = './static/'
@@ -43,14 +44,17 @@ def upload_file():
 		print imgList
 		displayList = []
 		pList = []
+		#from PCA
 		for i in imgList:
 			print i
 			print "hi"
 			displayList.append(i[:9] + "disp" + i[12:-3] + "jpg")
-			a = train("./resources/our",i)
+			a = train("./resources/ethnic",i)
 			pList.append(a)
+		print "PCA"
 		print displayList	
 		print pList
+		
 		con = sqlite3.connect('database.db')
 		con.row_factory = sqlite3.Row
 		cur = con.cursor()
@@ -68,8 +72,16 @@ def upload_file():
 		myList = []
 		for r in rows:
 			myList.append(r[0])	
-		print myList	
-		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = myList, displayList = displayList)
+		print myList
+
+		#from fischer
+		print "Fischer"
+		fiscList = []
+		for i in imgList:
+			fiscPrediction = identify(i,"abc.csv","model.pkl")
+			fiscList.append(fiscPrediction)
+		print fiscList		
+		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList)
 		
 if __name__ == '__main__':
 	app.run(debug = True)

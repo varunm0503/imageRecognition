@@ -10,7 +10,7 @@ def train(mypath, myimgpath, _energy = 0.85):
 	faces_count = 3 
 	faces_dir = mypath                                                             # directory path to the AT&T faces 
 
-	train_faces_count = 4                                                      # number of faces used for training 
+	train_faces_count = 20                                                      # number of faces used for training 
 	test_faces_count = 4                                                      # number of faces used for testing 
  
 	l = train_faces_count * faces_count                                         # training images count 
@@ -26,7 +26,7 @@ def train(mypath, myimgpath, _energy = 0.85):
 	
 	cur_img = 0 
 	for face_id in xrange(1, faces_count + 1): 
-		training_ids = random.sample(range(1, 5), train_faces_count)  # the id's of the 6 random training images 
+		training_ids = random.sample(range(1, 30), train_faces_count)  # the id's of the 6 random training images 
 		r_ids.append(training_ids)                              # remembering the training id's for later 
 		for training_id in training_ids: 
 			path_to_img = os.path.join(faces_dir, 's' + str(face_id), str(training_id) + '.pgm')          # relative path
