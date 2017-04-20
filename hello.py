@@ -79,7 +79,9 @@ def upload_file():
 		fiscList = []
 		for i in imgList:
 			fiscPrediction = identify(i,"abc.csv","model.pkl")
-			fiscList.append(fiscPrediction)
+			print fiscPrediction
+			if (fiscPrediction[1]['distances'][0] < 10.0):
+				fiscList.append(fiscPrediction[0])
 		print fiscList		
 		return render_template('afterDetection.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList)
 		

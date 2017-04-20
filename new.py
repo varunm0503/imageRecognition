@@ -68,7 +68,7 @@ if __name__ == '__main__':
 	#model = recognition.load_model_file(args.model_filename)
 	model = recognition.get_model_from_csv(filename=args.dataset,out_model_filename=args.model_filename)
 	print model
-	image = open('yk.pgm', 'rb') #open binary file in read mode
+	image = open('cr.pgm', 'rb') #open binary file in read mode
 	image_read = image.read()
 	image_data = base64.encodestring(image_read)
 	#print image_data

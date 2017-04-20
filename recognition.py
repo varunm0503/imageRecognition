@@ -53,8 +53,9 @@ class PredictableModelWrapper(object):
         prediction_result = self.model.predict(image)
         # Only take label right now:
         num_label = prediction_result[0]
+	dist = prediction_result[1]
         str_label = self.numeric_dataset.resolve_by_num(num_label)
-        return str_label
+        return str_label,dist
 
     def update(self, name, image):
         self.numeric_dataset.add(name, image)
