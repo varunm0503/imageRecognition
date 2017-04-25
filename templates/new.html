@@ -1,0 +1,141 @@
+ <!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="/static/css/materialize.min.css"  media="screen,projection"/>
+      
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <style>
+      .ssss 
+      {
+        display:none;
+      }
+      .modal { width: 50% !important  } 
+      </style>
+    </head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper black navbar-fixed">
+      <a href="#!" class="brand-logo center">Image Search</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#modal1" id="bla"><i class="material-icons right">backup</i>Upload another picture</a></li>
+      </ul>
+    </div>
+  </nav>
+      <div class="container">
+  
+        <!-- Page Content goes here -->
+        <div class="row">
+        
+
+
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal grey darken-1">
+    <div class="modal-content center-align">
+      <img class="responsive-img" width = "200" src="/static/2.png">
+      <br><br>
+      <form action="/" id="formId" method = "POST" enctype = "multipart/form-data">
+        <div class="file-field input-field">
+          <div class = "row">
+          <div class="btn waves-effect col m3 offset-m3 s12  white btn-flat">
+            <span class = "black-text">Browse</span>
+            <input type="file" name = "file">
+          </div>
+          <div class="file-path-wrapper col m3 s12">
+            <input class="file-path validate" type="text" name = "file">
+          </div>
+        </div>
+       </div>
+      </form>
+      
+
+    <div class="progress col s6 offset-s3 ssss" id="ssss">
+      <div class="indeterminate"></div>
+  </div>
+
+    </div>
+    <div class="modal-footer grey darken-3">
+      <button type="submit" form="formId" class="modal-action waves-effect waves-green btn-flat white-text">Upload</button>
+    </div>
+  </div>
+
+  <!-- end of modal-->
+  
+      <!-- <a class="waves-effect waves-light btn" id= 'bla' href="#modal1">Modal</a> -->
+       <div class="col s4">
+          <div class="card black">
+            <div class="card-image">
+              <img src="{{ image1 }}">
+            </div>
+            
+            <div class="card-action">
+              <a href="#">Uploaded Image</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s8">
+          <div class="card black">
+            <div class="card-content white-text">
+             
+              <div class = "row">
+                {% for img in displayList %}
+                  <div class = "col s4">
+                    <img src="{{ img }}" alt="" class="circle responsive-img">
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="card-action">
+              <a href="#">Detected People</a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+
+
+  </div>
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="/static/js/materialize.min.js"></script>
+      <script>
+      $(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+     $('.modal').modal({
+      dismissible: false, // Modal can be dismissed by clicking outside of the modal
+      endingTop: '20%',
+      opacity: 0.85// Opacity of modal background
+    }
+  );
+
+     $('#bla').click(function(){
+        //console.log(3);
+        $('#ssss').css('display', 'none');
+     });
+
+     $('#formId').submit(function() {
+    $('#ssss').css('display', 'block');
+    //console.log(2);
+});
+    if({{flag}} == 1)
+    $('#modal1').modal('open');
+    
+
+     
+
+  });
+      </script>
+
+    </body>
+  </html>
