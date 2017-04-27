@@ -70,7 +70,7 @@ class ExtendedLBP(LocalDescriptor):
         dy = ysize - blocksizey + 1
         # get center points
         C = np.asarray(X[origy:origy+dy,origx:origx+dx], dtype=np.uint8)
-        result = np.zeros((dy,dx), dtype=np.uint32)
+        result = np.zeros((dy,dx), dtype=np.uint64)
         for i,p in enumerate(sample_points):
             # get coordinate in the block
             y,x = p + (origy, origx)
@@ -94,7 +94,9 @@ class ExtendedLBP(LocalDescriptor):
             N += w4*X[cy:cy+dy,cx:cx+dx]
             # update LBP codes        
             D = N >= C
-            result += (1<<i)*D
+	    #print D
+            np.add(result,(1<<i)*D,out=result,casting="unsafe")		
+            #result += (1<<i)*D
         return result
 
     @property

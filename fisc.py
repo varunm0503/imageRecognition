@@ -18,7 +18,7 @@ import matplotlib.cm as cm
 from builtins import range
 
 # import facerec modules
-from feature import Fisherfaces
+from feature import *
 from distance import EuclideanDistance
 from classifier import NearestNeighbor
 from model import PredictableModel
@@ -93,7 +93,8 @@ if __name__ == "__main__":
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
     # Define the Fisherfaces as Feature Extraction method:
-    feature = Fisherfaces()
+    feature = SpatialHistogram()
+    #feature = Fisherfaces()
     # Define a 1-NN classifier with Euclidean Distance:
     classifier = NearestNeighbor(dist_metric=EuclideanDistance(), k=1)
     # Define the model as the combination
@@ -106,9 +107,9 @@ if __name__ == "__main__":
     # Then turn the first (at most) 16 eigenvectors into grayscale
     # images (note: eigenvectors are stored by column!)
     E = []
-    for i in range(min(model.feature.eigenvectors.shape[1], 16)):
-        e = model.feature.eigenvectors[:,i].reshape(X[0].shape)
-        E.append(minmax_normalize(e,0,255, dtype=np.uint8))
+    #for i in range(min(model.feature.eigenvectors.shape[1], 16)):
+    #    e = model.feature.eigenvectors[:,i].reshape(X[0].shape)
+    #    E.append(minmax_normalize(e,0,255, dtype=np.uint8))
     # Plot them and store the plot to "python_fisherfaces_fisherfaces.pdf"
     subplot(title="Fisherfaces", images=E, rows=4, cols=4, sptitle="Fisherface", colormap=cm.jet, filename="fisherfaces.png")
     # Perform a 10-fold cross validation

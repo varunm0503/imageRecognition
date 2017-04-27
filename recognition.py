@@ -13,7 +13,7 @@ except ImportError:
 # Import numpy:
 import numpy as np
 # Import facerec:
-from feature import ChainOperator, Fisherfaces
+from feature import *
 from preprocessing import Resize
 from dataset import NumericDataSet
 from distance import EuclideanDistance
@@ -70,7 +70,8 @@ class PredictableModelWrapper(object):
 # Now define a method to get a model trained on a NumericDataSet,
 # which should also store the model into a file if filename is given.
 def get_model(numeric_dataset, model_filename=None):
-    feature = ChainOperator(Resize((128,128)), Fisherfaces())
+    feature = ChainOperator(Resize((128,128)), SpatialHistogram())	
+    #feature = ChainOperator(Resize((128,128)), Fisherfaces())
     classifier = NearestNeighbor(dist_metric=EuclideanDistance(), k=1)
     inner_model = PredictableModel(feature=feature, classifier=classifier)
     model = PredictableModelWrapper(inner_model)
