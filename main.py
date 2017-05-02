@@ -2,10 +2,12 @@ import os
 import sqlite3
 from detect import *
 from convert import *
-from flask import render_template, g
+from flask import render_template, g, send_from_directory
 from werkzeug.utils import secure_filename
 from flask import Flask, request, redirect, url_for
 from new import *
+import glob
+import pickle
 
 DATABASE = '/path/to/database.db'
 UPLOAD_FOLDER = './static/'
@@ -26,6 +28,45 @@ def close_connection(exception):
 	if db is not None:
 		db.close()
 
+@app.route('/gallery/<path:filename>')
+def download_img(filename):
+	return send_from_directory("./gallery/", filename, as_attachment = True)
+
+@app.route('/gallery')
+def gallery():
+	files = glob.glob("./gallery/*.jpg")#searches all .jpg files, all support later for other extensions
+	dict_image = {} #each images links to a list of names
+	
+	try:
+		with open("./gallery/dict_image.dat", 'rb+') as sid:
+			dict_image = pickle.load(sid)
+	except:
+		print "No such File"
+		dict_image = {}
+
+	for f in files:
+		if f in dict_image:
+			continue
+		pgmList = detectFaceGallery(f) #detection function path changes to gallery
+		#print pgmList, jpgList
+
+		fiscList = []
+		for p in pgmList:
+			fiscPrediction = identify(p,"abc.csv","model.pkl") #recognition
+			if (fiscPrediction[1]['distances'][0] < 3.0):
+				fiscList.append(fiscPrediction[0])
+		print fiscList
+
+		dict_image[f] = fiscList
+		
+		for x in pgmList:
+			os.remove(x) #removing pgm files for no chance of collission with next one
+
+	print dict_image
+	with open("./gallery/dict_image.dat", 'wb') as sid:
+		pickle.dump(dict_image,sid)
+
+	return "Gallery Linking Done"
 
 @app.route('/',  methods = ['GET', 'POST'])
 def index():
@@ -66,7 +107,10 @@ def index():
 		string = string[:-1]
 		string += ")"
 		print string
-		cur.execute(string)
+		try:
+			cur.execute(string)
+		except:
+			return render_template('new.html', flag = 1, msg = 1)
 		rows = cur.fetchall()
 		print rows
 		myList = []
@@ -80,10 +124,38 @@ def index():
 		for i in imgList:
 			fiscPrediction = identify(i,"abc.csv","model.pkl")
 			print fiscPrediction
-			if (fiscPrediction[1]['distances'][0] < 10.0):
+			if (fiscPrediction[1]['distances'][0] < 3.0):
 				fiscList.append(fiscPrediction[0])
-		print fiscList		
-		return render_template('new.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList, flag = 2)
+		#print fiscList	
+
+		#gallery part from here #####################	
+		person_images_dict = {}
+
+		for person in fiscList:
+			#print person
+			dict_image = {} #each images links to a list of names
+	
+			try:
+				with open("./gallery/dict_image.dat", 'rb+') as sid:
+					dict_image = pickle.load(sid)
+			except:
+				print "No such File"
+				dict_image = {}
+
+			temp = []
+			for k,v in dict_image.items():
+				if person in v:
+					temp.append(k)
+			
+			final = []
+			for t in temp:
+				final.append(t[10:])
+			print final
+
+			person_images_dict[person] = final
+
+		print person_images_dict
+		return render_template('new.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList, flag = 2, total = person_images_dict)
 		
 
 if __name__ == '__main__':

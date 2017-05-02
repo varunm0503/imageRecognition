@@ -44,10 +44,10 @@
           <div class = "row">
           <div class="btn waves-effect col m3 offset-m3 s12  white btn-flat">
             <span class = "black-text">Browse</span>
-            <input type="file" name = "file">
+            <input type="file" name = "file" required>
           </div>
           <div class="file-path-wrapper col m3 s12">
-            <input class="file-path validate" type="text" name = "file">
+            <input class="file-path validate" type="text" name = "file" required>
           </div>
         </div>
        </div>
@@ -56,6 +56,12 @@
 
     <div class="progress col s6 offset-s3 ssss" id="ssss">
       <div class="indeterminate"></div>
+  </div>
+
+   <div id = 'err_msg'>
+    {%if msg == 1%}
+      Please reupload a new pic. Alogorithm couldn't detect faces.
+      {%endif%}
   </div>
 
     </div>
@@ -80,6 +86,8 @@
         </div>
 
         <div class="col s8">
+         
+         <div class = 'row'> 
           <div class="card black">
             <div class="card-content white-text">
              
@@ -95,6 +103,31 @@
               <a href="#">Detected People</a>
             </div>
           </div>
+        </div>
+
+        {% for key in total %}
+        {%if total[key]%}
+         <div class = 'row'> 
+          <div class="card black">
+            <div class="card-content white-text">
+             
+              <div class = "row">
+                {% for f in total[key] %}
+                  <div class = "col s4">
+                    <img src = "{{url_for('download_img', filename = f )}}" alt="" class="circle responsive-img">
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="card-action">
+              <a href="#">Pictures of {{key}}</a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %} 
+
+             
         </div>
 
 
@@ -126,6 +159,7 @@
 
      $('#formId').submit(function() {
     $('#ssss').css('display', 'block');
+    $('#err_msg').css('display', 'none');
     //console.log(2);
 });
     if({{flag}} == 1)
