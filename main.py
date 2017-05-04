@@ -68,6 +68,12 @@ def gallery():
 
 	return "Gallery Linking Done"
 
+@app.route('/train')
+def fisctrain():
+	fiscTrain("abc.csv","model.pkl")
+        return "Training Done"
+
+
 @app.route('/',  methods = ['GET', 'POST'])
 def index():
 	if request.method == 'GET':
@@ -156,7 +162,6 @@ def index():
 
 		print person_images_dict
 		return render_template('new.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList, flag = 2, total = person_images_dict)
-		
 
 if __name__ == '__main__':
 	app.run(debug = True)

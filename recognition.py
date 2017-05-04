@@ -124,6 +124,7 @@ def get_model_from_csv(filename, out_model_filename):
     return model
 
 def load_model_file(model_filename):
-    load_model(model_filename)
+    model = load_model(model_filename)
+    return model
 
 

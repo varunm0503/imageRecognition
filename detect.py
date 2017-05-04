@@ -35,6 +35,7 @@ def detectFace(img_path):
 		im = Image.fromarray(gray2)
 		imgList.append( "img" + str(x) + str(y) + ".pgm" )
 		im.save(name2)
+		os.remove(name)
 		#gray2.save(name2)
 	print "detected"
 	return imgList
