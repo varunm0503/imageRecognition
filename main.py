@@ -8,6 +8,8 @@ from flask import Flask, request, redirect, url_for
 from new import *
 import glob
 import pickle
+import csv
+from shutil import copyfile
 
 DATABASE = '/path/to/database.db'
 UPLOAD_FOLDER = './static/'
@@ -96,33 +98,38 @@ def index():
 			print i
 			print "hi"
 			displayList.append(i[:9] + "disp" + i[12:-3] + "jpg")
-			a = train("./resources/ethnic",i)
-			pList.append(a)
-		print "PCA"
+
+			#####PCA commented for now #####
+
+			#a = train("./resources/ethnic",i)
+			#pList.append(a)
+		#print "PCA"
 		print displayList	
-		print pList
+		#print pList
 		
-		con = sqlite3.connect('database.db')
-		con.row_factory = sqlite3.Row
-		cur = con.cursor()
-		print "Opened database successfully"
-		string = "select NAME from user where Id in ("
-		for p in pList:
-			string += str(p)
-			string += ","
-		string = string[:-1]
-		string += ")"
-		print string
-		try:
-			cur.execute(string)
-		except:
-			return render_template('new.html', flag = 1, msg = 1)
-		rows = cur.fetchall()
-		print rows
-		myList = []
-		for r in rows:
-			myList.append(r[0])	
-		print myList
+		####Commenting because PCA is commented out ######
+		
+		#con = sqlite3.connect('database.db')
+		#con.row_factory = sqlite3.Row
+		#cur = con.cursor()
+		#print "Opened database successfully"
+		#string = "select NAME from user where Id in ("
+		#for p in pList:
+		#	string += str(p)
+		#	string += ","
+		#string = string[:-1]
+		#string += ")"
+		#print string
+		#try:
+		#	cur.execute(string)
+		#except:
+		#	return render_template('new.html', flag = 1, msg = 1)
+		#rows = cur.fetchall()
+		#print rows
+		#myList = []
+		#for r in rows:
+		#	myList.append(r[0])	
+		#print myList
 
 		#from fischer
 		print "Fischer"
@@ -133,10 +140,31 @@ def index():
 			if (fiscPrediction[1]['distances'][0] < 3.0):
 				fiscList.append(fiscPrediction[0])
 		#print fiscList	
+		
+		detList = zip(fiscList, displayList, imgList)
+		#print detList
+		
+		csvList = {}
+		with open('abc.csv') as csvfile:
+			reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+			for row in reader:
+				r = row[0].split(';')
+				csvList[r[0]] = r[1]
+		
+		#print csvList	
+		
+		for p in detList:
+			src = p[2]
+			dst = csvList[p[0]] + '/' + (src.split('/'))[2]
+			print src
+			print dst
+			copyfile(src, dst)
+		#	gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+		#	im.save(csvList[p[0]])
 
 		#gallery part from here #####################	
 		person_images_dict = {}
-
+		
 		for person in fiscList:
 			#print person
 			dict_image = {} #each images links to a list of names
@@ -161,7 +189,7 @@ def index():
 			person_images_dict[person] = final
 
 		print person_images_dict
-		return render_template('new.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList, flag = 2, total = person_images_dict)
+		return render_template('new.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList, flag = 2, total = person_images_dict, detList = detList)
 
 if __name__ == '__main__':
 	app.run(debug = True)

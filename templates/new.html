@@ -92,9 +92,10 @@
             <div class="card-content white-text">
              
               <div class = "row">
-                {% for img in displayList %}
+                {% for p in detList %}
                   <div class = "col s4">
-                    <img src="{{ img }}" alt="" class="circle responsive-img">
+                    <img src="{{ p[1] }}" alt="" class="circle responsive-img">
+		    <div class ="name"> {{ p[0] }} </div> 
                   </div>
                 {% endfor %}
               </div>
