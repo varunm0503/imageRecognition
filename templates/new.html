@@ -96,6 +96,7 @@
                   <div class = "col s4">
                     <img src="{{ p[1] }}" alt="" class="circle responsive-img">
 		    <div class ="name"> {{ p[0] }} </div> 
+			<button class="not" id = " {{ p[2] }}"onclick = "myFunction(this) "> NOT {{ p[0] }}? </button>
                   </div>
                 {% endfor %}
               </div>
@@ -170,6 +171,24 @@
      
 
   });
+	function myFunction(y){
+		a = ((y.getAttribute("id")).split("/"))[2];
+		b = ((y.innerText).split(" "))[1];
+		l = b.length;
+		c = b.substr(0,l-1);
+		$.ajax({
+			
+            		url: '/remove/' + a + "/" + c,
+            		type: 'GET',
+            			success: function(response) {
+                			console.log(response);
+					y.style.display = "none";
+            			},
+            			error: function(error) {
+                			console.log(error);
+            			}
+        	});	
+	}
       </script>
 
     </body>

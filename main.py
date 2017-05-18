@@ -4,12 +4,13 @@ from detect import *
 from convert import *
 from flask import render_template, g, send_from_directory
 from werkzeug.utils import secure_filename
-from flask import Flask, request, redirect, url_for,flash
+from flask import Flask, request, redirect, url_for,flash, jsonify
 from new import *
 import glob
 import pickle
 import csv
 from shutil import copyfile, move
+from werkzeug.routing import BaseConverter
 
 DATABASE = '/path/to/database.db'
 UPLOAD_FOLDER = './static/'
@@ -80,6 +81,27 @@ def fisctrain():
 	fiscTrain("abc.csv","model.pkl")
         return "Training Done"
 
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+
+app.url_map.converters['regex'] = RegexConverter
+
+@app.route('/remove/<x>/<y>')
+def rmPGM(x,y):
+	print x,y
+	csvList = {}
+	with open('abc.csv') as csvfile:
+		reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+		for row in reader:
+			r = row[0].split(';')
+			csvList[r[0]] = r[1]
+	print csvList
+	path = csvList[y] + "/" + x
+	os.remove(path)
+	return jsonify(1);
 
 @app.route('/',  methods = ['GET', 'POST'])
 def index():
@@ -134,7 +156,7 @@ def index():
 		#myList = []
 		#for r in rows:
 		#	myList.append(r[0])	
-		#print myList
+		#print myList`
 
 		#from fischer
 		print "Fischer"
