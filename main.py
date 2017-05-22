@@ -11,6 +11,7 @@ import pickle
 import csv
 from shutil import copyfile, move
 from werkzeug.routing import BaseConverter
+from zipfile import *
 
 DATABASE = '/path/to/database.db'
 UPLOAD_FOLDER = './static/'
@@ -35,6 +36,11 @@ def close_connection(exception):
 	db = getattr(g, '_database', None)
 	if db is not None:
 		db.close()
+
+@app.route('/zip/<name>')
+def download_zip(name):
+	filename = name + ".zip"
+	return send_from_directory("./zips/", filename, as_attachment = True)
 
 @app.route('/gallery/<path:filename>')
 def download_img(filename):
@@ -214,6 +220,20 @@ def index():
 			print final
 
 			person_images_dict[person] = final
+
+
+		###ZIP_PART_HERE
+		#remove all initially made zips (from last iteration)
+		zfiles = glob.glob("./zips/*.zip")
+		for zf in zfiles:
+			os.remove(zf)
+
+		for zk,zv in person_images_dict.items():
+			zname = "./zips/" + zk + ".zip"
+			zip_archive = ZipFile(zname, "w")
+			for item in zv:
+				zip_archive.write("./gallery/" + item, arcname = item)
+			zip_archive.close()
 
 		print person_images_dict
 		return render_template('new.html', image1 = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(f.filename)), imgList = imageList, pList = fiscList, displayList = displayList, flag = 2, total = person_images_dict, detList = detList)
