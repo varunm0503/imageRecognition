@@ -16,7 +16,7 @@ import numpy as np
 from feature import *
 from preprocessing import Resize
 from dataset import NumericDataSet
-from distance import EuclideanDistance
+from distance import *
 from classifier import NearestNeighbor
 from model import PredictableModel
 from validation import KFoldCrossValidation
@@ -72,7 +72,9 @@ class PredictableModelWrapper(object):
 def get_model(numeric_dataset, model_filename=None):
     feature = ChainOperator(Resize((128,128)), SpatialHistogram())	
     #feature = ChainOperator(Resize((128,128)), Fisherfaces())
-    classifier = NearestNeighbor(dist_metric=EuclideanDistance(), k=1)
+    classifier = NearestNeighbor(dist_metric=NormalizedCorrelation(), k=1)
+    print "kjasnanscal"
+    #classifier = NearestNeighbor(dist_metric=EuclideanDistance(), k=1)
     inner_model = PredictableModel(feature=feature, classifier=classifier)
     model = PredictableModelWrapper(inner_model)
     model.set_data(numeric_dataset)

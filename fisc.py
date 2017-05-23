@@ -19,8 +19,8 @@ from builtins import range
 
 # import facerec modules
 from feature import *
-from distance import EuclideanDistance
-from classifier import NearestNeighbor
+from distance import *
+from classifier import NearestNeighbor,SVM
 from model import PredictableModel
 from validation import KFoldCrossValidation
 from visual import subplot
@@ -96,14 +96,15 @@ if __name__ == "__main__":
     feature = SpatialHistogram()
     #feature = Fisherfaces()
     # Define a 1-NN classifier with Euclidean Distance:
-    classifier = NearestNeighbor(dist_metric=EuclideanDistance(), k=1)
+    classifier = NearestNeighbor(dist_metric=NormalizedCorrelation(), k=1)
+    #classifier = SVM()
     # Define the model as the combination
     my_model = PredictableModel(feature=feature, classifier=classifier)
     # Compute the Fisherfaces on the given data (in X) and labels (in y):
     my_model.compute(X, y)
     # We then save the model, which uses Pythons pickle module:
-    save_model('model.pkl', my_model)
-    model = load_model('model.pkl')
+    save_model('modelTry.pkl', my_model)
+    model = load_model('modelTry.pkl')
     # Then turn the first (at most) 16 eigenvectors into grayscale
     # images (note: eigenvectors are stored by column!)
     E = []
