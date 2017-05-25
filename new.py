@@ -5,15 +5,14 @@ from PIL import Image
 
 import sys
 
-from model import PredictableModel
-from lbp import ExtendedLBP
-from feature import SpatialHistogram
-from classifier import NearestNeighbor
+from method import PredictableModel
+from feature import SpatialHistogram, ExtendedLBP
+from identifier import NearestNeighbor
 
 import logging
 from logging.handlers import RotatingFileHandler
 
-import recognition
+import recognize
 
 def read_image(base64_image):
     """ Decodes Base64 image data, reads it with PIL and converts it into grayscale.
@@ -44,7 +43,7 @@ def fiscTrain(csv_file, model_filename):
 	print csv_file
 	print model_filename
 	global model
-	model = recognition.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
+	model = recognize.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
 	print model
 
 def identifyAndTrain(image_path, csv_file , model_filename):
@@ -53,7 +52,7 @@ def identifyAndTrain(image_path, csv_file , model_filename):
         print csv_file
         print model_filename
         global model
-        model = recognition.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
+        model = recognize.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
         print model
         image = open(image_path, 'rb') #open binary file in read mode
         image_read = image.read()
@@ -69,8 +68,8 @@ def identify(image_path, csv_file , model_filename):
 	print csv_file
 	print model_filename
 	global model
-	model = recognition.load_model_file(model_filename)	
-	#model = recognition.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
+	model = recognize.load_model_file(model_filename)	
+	#model = recognize.get_model_from_csv(filename=csv_file,out_model_filename=model_filename)
 	print model
 	image = open(image_path, 'rb') #open binary file in read mode
 	image_read = image.read()
@@ -90,8 +89,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	print args
 	global model
-	#model = recognition.load_model_file(args.model_filename)
-	model = recognition.get_model_from_csv(filename=args.dataset,out_model_filename=args.model_filename)
+	model = recognize.get_model_from_csv(filename=args.dataset,out_model_filename=args.model_filename)
 	print model
 	image = open('cr.pgm', 'rb') #open binary file in read mode
 	image_read = image.read()

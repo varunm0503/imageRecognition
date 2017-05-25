@@ -5,19 +5,75 @@ matplotlib.use('Agg')
 import matplotlib.cm as cm
 from builtins import range
 from feature import *
-from distance import *
-from classifier import NearestNeighbor
-from model import PredictableModel
-from validation import KFoldCrossValidation
-from visual import subplot
-from util import minmax_normalize
-from serialization import save_model, load_model
+from identifier import *
+from method import PredictableModel
+from tests import KFoldCrossValidation
 import numpy as np
 try:
     from PIL import Image
 except ImportError:
     import Image
 import logging
+
+from sklearn.externals import joblib
+
+import matplotlib.pyplot as plt
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+import math as math
+
+from builtins import range
+
+def create_font(fontname='Tahoma', fontsize=10):
+    return { 'fontname': fontname, 'fontsize':fontsize }
+
+def subplot(title, images, rows, cols, sptitle="subplot", sptitles=[], colormap=cm.gray, ticks_visible=True, filename=None):
+    fig = plt.figure()
+    # main title
+    fig.text(.5, .95, title, horizontalalignment='center')
+    for i in range(len(images)):
+        ax0 = fig.add_subplot(rows,cols,(i+1))
+        plt.setp(ax0.get_xticklabels(), visible=False)
+        plt.setp(ax0.get_yticklabels(), visible=False)
+        if len(sptitles) == len(images):
+            plt.title("%s #%s" % (sptitle, str(sptitles[i])), create_font('Tahoma',10))
+        else:
+            plt.title("%s #%d" % (sptitle, (i+1)), create_font('Tahoma',10))
+        plt.imshow(np.asarray(images[i]), cmap=colormap)
+    if filename is None:
+        plt.show()
+    else:
+        fig.savefig(filename)
+
+def minmax_normalize(X, low, high, minX=None, maxX=None, dtype=np.float):
+    """ min-max normalize a given matrix to given range [low,high].
+    
+    Args:
+        X [rows x columns] input data
+        low [numeric] lower bound
+        high [numeric] upper bound
+    """
+    if minX is None:
+        minX = np.min(X)
+    if maxX is None:
+        maxX = np.max(X)
+    minX = float(minX)
+    maxX = float(maxX)
+    # Normalize to [0...1].    
+    X = X - minX
+    X = X / (maxX - minX)
+    # Scale to [low...high].
+    X = X * (high-low)
+    X = X + low
+    return np.asarray(X, dtype=dtype)
+
+def save_model(filename, model):
+    joblib.dump(model, filename, compress=9)
+
+def load_model(filename):
+    return joblib.load(filename)
 
 def read_images(path, sz=None):
     """Reads the images in a given folder, resizes images on the fly if size is given.

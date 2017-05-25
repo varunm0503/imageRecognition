@@ -5,7 +5,7 @@ from builtins import range
 
 import numpy as np
 
-from model import PredictableModel
+from method import PredictableModel
 
 def shuffle(X, y):
     """ Shuffles two arrays by column (len(X) == len(y))

@@ -5,16 +5,76 @@ except ImportError:
     import Image
 import numpy as np
 from feature import *
-from preprocessing import Resize
-from dataset import NumericDataSet
-from distance import *
-from classifier import NearestNeighbor
-from model import PredictableModel
-from validation import KFoldCrossValidation
-from serialization import save_model, load_model
-
+from identifier import *
+from method import PredictableModel
+from tests import KFoldCrossValidation
 from os import listdir
 from os.path import isfile, join
+
+from scipy.misc import imresize
+
+from sklearn.externals import joblib
+
+def save_model(filename, model):
+    joblib.dump(model, filename, compress=9)
+
+def load_model(filename):
+    return joblib.load(filename)
+
+class Resize(AbstractFeature):
+    def __init__(self, size):
+        AbstractFeature.__init__(self)
+        self._size = size
+
+    def compute(self,X,y):
+        Xp = []
+        for xi in X:
+            Xp.append(self.extract(xi))
+        return Xp
+
+    def extract(self,X):
+        return imresize(X, self._size)
+
+    def __repr__(self):
+        return "Resize (size=%s)" % (self._size,)
+
+
+class NumericDataSet(object):
+    def __init__(self):
+        self.data = {}
+        self.str_to_num_mapping = {}
+        self.num_to_str_mapping = {}
+
+    def add(self, label, image):
+        try:
+            self.data[label].append(image)
+        except:
+            self.data[label] = [image]
+            numerical_identifier = len(self.str_to_num_mapping)
+            # Store in mapping tables:
+            self.str_to_num_mapping[label] = numerical_identifier
+            self.num_to_str_mapping[numerical_identifier] = label
+
+    def get(self):
+        X = []
+        y = []
+        for name, num in self.str_to_num_mapping.iteritems():
+            for image in self.data[name]:
+                X.append(image)
+                y.append(num)
+        return X,y
+
+    def resolve_by_str(self, label):
+        return self.str_to_num_mapping[label]
+
+    def resolve_by_num(self, numerical_identifier):
+        return self.num_to_str_mapping[numerical_identifier]
+
+    def length(self):
+        return len(self.data)
+
+    def __repr__(self):
+        print("NumericDataSet")
 
 # This is the face recognition module for the RESTful Webservice.
 #
