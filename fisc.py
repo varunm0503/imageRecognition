@@ -1,40 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# Copyright (c) Philipp Wagner. All rights reserved.
-# Licensed under the BSD license. See LICENSE file in the project root for full license information.
-
 import os
 import sys
-
-#sys.path.append("../..")
-
-# Import Matplotlib:
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.cm as cm
-
-# For Python2 backward comability:
 from builtins import range
-
-# import facerec modules
 from feature import *
 from distance import *
-from classifier import NearestNeighbor,SVM
+from classifier import NearestNeighbor
 from model import PredictableModel
 from validation import KFoldCrossValidation
 from visual import subplot
 from util import minmax_normalize
 from serialization import save_model, load_model
-# import numpy, matplotlib and logging
 import numpy as np
-# try to import the PIL Image module
 try:
     from PIL import Image
 except ImportError:
     import Image
 import logging
-
 
 def read_images(path, sz=None):
     """Reads the images in a given folder, resizes images on the fly if size is given.
@@ -94,10 +77,8 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
     # Define the Fisherfaces as Feature Extraction method:
     feature = SpatialHistogram()
-    #feature = Fisherfaces()
     # Define a 1-NN classifier with Euclidean Distance:
     classifier = NearestNeighbor(dist_metric=NormalizedCorrelation(), k=1)
-    #classifier = SVM()
     # Define the model as the combination
     my_model = PredictableModel(feature=feature, classifier=classifier)
     # Compute the Fisherfaces on the given data (in X) and labels (in y):
@@ -118,5 +99,3 @@ if __name__ == "__main__":
     cv.validate(X, y)
     # And print the result:
     cv.print_results()
-
-

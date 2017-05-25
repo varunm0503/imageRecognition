@@ -1,18 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# Copyright (c) Philipp Wagner. All rights reserved.
-# Licensed under the BSD license. See LICENSE file in the project root for full license information.
-
 import csv, os, sys
-# Import PIL
 try:
     from PIL import Image
 except ImportError:
     import Image
-# Import numpy:
 import numpy as np
-# Import facerec:
 from feature import *
 from preprocessing import Resize
 from dataset import NumericDataSet
@@ -24,7 +15,6 @@ from serialization import save_model, load_model
 
 from os import listdir
 from os.path import isfile, join
-
 
 # This is the face recognition module for the RESTful Webservice.
 #
@@ -71,10 +61,7 @@ class PredictableModelWrapper(object):
 # which should also store the model into a file if filename is given.
 def get_model(numeric_dataset, model_filename=None):
     feature = ChainOperator(Resize((128,128)), SpatialHistogram())	
-    #feature = ChainOperator(Resize((128,128)), Fisherfaces())
-    classifier = NearestNeighbor(dist_metric=NormalizedCorrelation(), k=1)
-    print "kjasnanscal"
-    #classifier = NearestNeighbor(dist_metric=EuclideanDistance(), k=1)
+    classifier = NearestNeighbor(dist_metric=NormalizedCorrelation(), k=1) 
     inner_model = PredictableModel(feature=feature, classifier=classifier)
     model = PredictableModelWrapper(inner_model)
     model.set_data(numeric_dataset)
@@ -102,13 +89,6 @@ def read_images(path, identifier, numeric_dataset):
             print "Unexpected error:", sys.exc_info()[0]
             raise
 
-# read_csv is a tiny little method, that takes a csv file defined
-# like this:
-#
-#   Philipp Wagner;D:/images/philipp
-#   Another Name;D:/images/another_name
-#   ...
-#
 def read_from_csv(filename):
     numeric_dataset = NumericDataSet()
     with open(filename, 'rb') as csvfile:
@@ -119,7 +99,6 @@ def read_from_csv(filename):
             read_images(path, identifier, numeric_dataset)
     return numeric_dataset
 
-# Just some sugar on top...
 def get_model_from_csv(filename, out_model_filename):
     numeric_dataset = read_from_csv(filename)
     model = get_model(numeric_dataset, out_model_filename)
@@ -128,5 +107,3 @@ def get_model_from_csv(filename, out_model_filename):
 def load_model_file(model_filename):
     model = load_model(model_filename)
     return model
-
-

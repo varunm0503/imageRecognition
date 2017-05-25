@@ -8,7 +8,6 @@ import sys
 from model import PredictableModel
 from lbp import ExtendedLBP
 from feature import SpatialHistogram
-from distance import ChiSquareDistance
 from classifier import NearestNeighbor
 
 import logging

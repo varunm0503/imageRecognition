@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# Copyright (c) Philipp Wagner. All rights reserved.
-# Licensed under the BSD license. See LICENSE file in the project root for full license information.
-
 import os
 import random
 import numpy as np
@@ -21,22 +15,6 @@ def read_image(filename):
     except:
         print("Cannot open image.")
     return imarr
-
-def asRowMatrix(X):
-    """
-    Creates a row-matrix from multi-dimensional data items in list l.
-    
-    X [list] List with multi-dimensional data.
-    """
-    if len(X) == 0:
-        return np.array([])
-    total = 1
-    for i in range(0, np.ndim(X[0])):
-        total = total * X[0].shape[i]
-    mat = np.empty([0, total], dtype=X[0].dtype)
-    for row in X:
-        mat = np.append(mat, row.reshape(1,-1), axis=0) # same as vstack
-    return np.asmatrix(mat)
 
 def asColumnMatrix(X):
     """
