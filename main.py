@@ -67,7 +67,7 @@ def gallery():
 		fiscList = []
 		for p in pgmList:
 			fiscPrediction = identify(p,"abc.csv","model.pkl") #recognition
-			if (fiscPrediction[1]['distances'][0] < 0.4):
+			if (fiscPrediction[1]['distances'][0] < 0.33):
 				fiscList.append(fiscPrediction[0])
 		print fiscList
 
@@ -170,7 +170,9 @@ def index():
 		for i in imgList:
 			fiscPrediction = identify(i,"abc.csv","model.pkl")
 			print fiscPrediction
-			if (fiscPrediction[1]['distances'][0] < 0.4):
+			print "result"
+			print fiscPrediction[1]['distances'][0]
+			if (fiscPrediction[1]['distances'][0] < 0.33):
 				fiscList.append(fiscPrediction[0])
 		#print fiscList	
 		
