@@ -9,6 +9,7 @@ from new import *
 import glob
 import pickle
 import csv
+import shutil
 from shutil import copyfile, move
 from werkzeug.routing import BaseConverter
 from zipfile import *
@@ -16,7 +17,7 @@ from zipfile import *
 DATABASE = '/path/to/database.db'
 UPLOAD_FOLDER = './static/'
 INPUT_FOLDER = './face_jpg/'
-OUTPUT_FOLDER = './face_pgm/'
+OUTPUT_FOLDER = './resources/ethnic/'
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
 
 
@@ -248,9 +249,11 @@ def index_():
 
 	if request.method == 'POST':
 		files = request.files.getlist("file[]")
+		print files
 		name = request.form.get("name")
 		print name
 		src_path = INPUT_FOLDER+name+'/'
+		print src_path
 		os.makedirs(src_path)
 		imageList=[]
 		for file in files:
@@ -259,14 +262,30 @@ def index_():
 			imageList.extend(tempList)
 		print imageList
 		no_of_folders = len(glob.glob(OUTPUT_FOLDER+'*'))
-		des_path = OUTPUT_FOLDER+ 's'+ str(no_of_folders+1)+'/'
-		os.makedirs(des_path) #new folder created
-		for i in imageList:
-			copyfile(UPLOAD_FOLDER + i, des_path + i)  #copy and paste
-		# 	# move(UPLOAD_FOLDER+i, new_path)    #cut and paste
-		with open(INPUT_FOLDER+'list.csv', 'a') as f:
-			writer = csv.writer(f)
-			writer.writerow([name,des_path])
+		print no_of_folders
+		csvList = {}
+		shutil.rmtree(src_path)
+		with open('abc.csv') as csvfile:
+			reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+			for row in reader:
+                        	r = row[0].split(';')
+                        	csvList[r[0]] = r[1]
+        	print csvList
+		if name in csvList:
+			print csvList[name]
+			for i in imageList:
+                        	copyfile(UPLOAD_FOLDER + i, csvList[name] + "/" + i)  #copy and paste
+		else:
+			print"none"
+			dest_path = OUTPUT_FOLDER + name
+			des_path = OUTPUT_FOLDER + name + '/'
+			os.makedirs(des_path) #new folder created
+			for i in imageList:
+				copyfile(UPLOAD_FOLDER + i, des_path + i)  #copy and paste
+			with open('abc.csv', 'a') as f:
+				writer = csv.writer(f , delimiter = ';')
+				#out = name + ";" + dest_path
+				writer.writerow([name,dest_path])
 		return "detection done"
 
 if __name__ == '__main__':
