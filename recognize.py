@@ -76,16 +76,6 @@ class NumericDataSet(object):
     def __repr__(self):
         print("NumericDataSet")
 
-# This is the face recognition module for the RESTful Webservice.
-#
-# The current implementation uses a fixed model defined in code. 
-# A simple wrapper works around a limitation of the current framework, 
-# because as time of writing this only integer labels can be passed into 
-# the classifiers of the facerec framework. 
-
-# This wrapper hides the complexity of dealing with integer labels for
-# the training labels. It also supports updating a model, instead of 
-# re-training it. 
 class PredictableModelWrapper(object):
 
     def __init__(self, model):
@@ -101,7 +91,6 @@ class PredictableModelWrapper(object):
 
     def predict(self, image):
         prediction_result = self.model.predict(image)
-        # Only take label right now:
         num_label = prediction_result[0]
 	dist = prediction_result[1]
         str_label = self.numeric_dataset.resolve_by_num(num_label)
@@ -117,8 +106,6 @@ class PredictableModelWrapper(object):
         return "PredictableModelWrapper (Inner Model=%s)" % (str(self.model))
 
 
-# Now define a method to get a model trained on a NumericDataSet,
-# which should also store the model into a file if filename is given.
 def get_model(numeric_dataset, model_filename=None):
     feature = ChainOperator(Resize((128,128)), SpatialHistogram())	
     classifier = NearestNeighbor(dist_metric=NormalizedCorrelation(), k=1) 
@@ -130,9 +117,6 @@ def get_model(numeric_dataset, model_filename=None):
         save_model(model_filename, model)
     return model
 
-# Now a method to read images from a folder. It's pretty simple,
-# since we can pass a numeric_dataset into the read_images  method 
-# and just add the files as we read them. 
 def read_images(path, identifier, numeric_dataset):
     onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
     print identifier

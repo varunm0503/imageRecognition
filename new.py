@@ -15,12 +15,6 @@ from logging.handlers import RotatingFileHandler
 import recognize
 
 def read_image(base64_image):
-    """ Decodes Base64 image data, reads it with PIL and converts it into grayscale.
-
-    Args:
-    
-        base64_image [string] A Base64 encoded image (all types PIL supports).
-    """
     enc_data = base64.b64decode(base64_image)
     file_like = cStringIO.StringIO(enc_data)
     im = Image.open(file_like)
